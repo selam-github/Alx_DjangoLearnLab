@@ -18,9 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 #from bookshelf import views
 from django.http import HttpResponseRedirect
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("bookshelf/", include("bookshelf.urls")),
-    #path('', views.home, name='home'),
-    path('', lambda request: HttpResponseRedirect('bookshelf/')),
+    path('relationship_app/', include('relationship_app.urls')),
 ]
