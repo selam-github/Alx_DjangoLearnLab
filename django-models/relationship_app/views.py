@@ -36,7 +36,7 @@ class LibraryDetailView(DetailView):
       return render(request, 'relationship_app/register.html', {'form': form})
     # Helper function to check roles
 def check_role(user, role):
-    return user.userprofile.role == role
+    return user.userprofile.role == role 
 
 @user_passes_test(lambda u: check_role(u, 'Admin'))
 def admin_view(request):
