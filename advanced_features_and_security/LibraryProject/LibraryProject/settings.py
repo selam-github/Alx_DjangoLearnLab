@@ -157,3 +157,5 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enables the X-XSS-Protection: 1; mode=block header
 SECURE_BROWSER_XSS_FILTER = True
+# Define the header used by the proxy to indicate that the connection is secure
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
