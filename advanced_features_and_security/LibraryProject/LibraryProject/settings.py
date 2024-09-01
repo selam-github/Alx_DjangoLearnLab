@@ -127,31 +127,35 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL='bookshelf.CustomUser'
-# Prevents content sniffing
-SECURE_CONTENT_TYPE_NOSNIFF = True
 
+
+## Security-related HTTP headers
+# Prevents the site from being rendered in a frame or iframe
+X_FRAME_OPTIONS = 'DENY'# Prevent framing of your site to protect against clickjacking
+# Prevents content sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True #Prevent browsers from MIME-sniffing a response away from the declared content-type
 # Enables the browser's XSS filtering and ensures it is enabled
 SECURE_BROWSER_XSS_FILTER = True
 
-# Prevents the site from being rendered in a frame or iframe
-X_FRAME_OPTIONS = 'DENY'
-
-
+## Secure cookies settings
 # Enforces CSRF cookies to be sent over HTTPS
-CSRF_COOKIE_SECURE = True
-
+CSRF_COOKIE_SECURE = True  # Transmit CSRF cookies only over HTTPS
 # Enforces session cookies to be sent over HTTPS
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True     # Transmit session cookies only over HTTPS
 
-SECURE_SSL_REDIRECT = True
+# Ensure that all connections are made via HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect all non-HTTPS requests to HTTPS
 
-# settings.py
+## HTTP Strict Transport Security (HSTS) settings
+SECURE_HSTS_SECONDS = 31536000  # One year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow the site to be included in browsers' preloaded HSTS lists
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 # Enables the X-Content-Type-Options: nosniff header
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enables the X-XSS-Protection: 1; mode=block header
 SECURE_BROWSER_XSS_FILTER = True
+# Define the header used by the proxy to indicate that the connection is secure
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

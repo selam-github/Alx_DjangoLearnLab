@@ -1,0 +1,8 @@
+<!-- Path: LibraryProject/bookshelf/templates/bookshelf/form_example.html -->
+<form method="post" action="{% url 'your_view_name' %}">
+    {% csrf_token %}
+    <!-- Your form fields here -->
+    <label for="input_field">Input:</label>
+    <input type="text" id="input_field" name="input_field" required>
+    <button type="submit">Submit</button>
+</form>
