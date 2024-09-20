@@ -4,10 +4,9 @@ from django.contrib.auth.models import AbstractUser ,Group, Permission
 #Create a custom user model that extends Django’s AbstractUser, 
 
 class CustomUser(AbstractUser):
-    bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
-
 
     # Update related names to avoid conflicts
     groups = models.ManyToManyField(
