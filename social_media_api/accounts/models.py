@@ -6,8 +6,8 @@ from django.contrib.auth.models import AbstractUser ,Group, Permission
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
-
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+    
     # Update related names to avoid conflicts
     groups = models.ManyToManyField(
         Group,

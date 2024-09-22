@@ -4,6 +4,8 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import FilterSet, filters
 from django_filters import rest_framework as filters
+from rest_framework import generics
+from rest_framework.response import Response
 
 # ViewSet for Post
 class PostViewSet(viewsets.ModelViewSet):
@@ -34,5 +36,9 @@ class PostFilter(FilterSet):
         fields = ['title', 'content']
 
 
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer  # Replace with your serializer
 
+    def get_queryset(self):
+        return Post.objects.filter(author__in=self.request.user.following.all()).order_by('-created_at')
     
