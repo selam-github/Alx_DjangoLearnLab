@@ -82,4 +82,12 @@ class UnlikePostView(generics.GenericAPIView):
     def post(self, request, pk):
         post = Post.objects.get(id=pk)
         Like.objects.filter(user=request.user, post=post).delete()
-        return Response({"message": "Post unliked!"})   
+        return Response({"message": "Post unliked!"})  
+
+class PostDetailView(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer  # Make sure to import your PostSerializer
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Post, pk=pk) 
