@@ -37,8 +37,17 @@ class PostFilter(FilterSet):
 
 
 class FeedView(generics.ListAPIView):
-    serializer_class = PostSerializer  # Replace with your serializer
+# Get the current user
+     serializer_class = PostSerializer  
+     permission_classes = [IsAuthenticated]
+       # Replace with your actual serializer
 
-    def get_queryset(self):
+# Get all posts from users that the current user follows
+def get_queryset(self):
+         # Get the current user
+        current_user = self.request.user
+        # Get all posts from users that the current user follows
+        following_users = current_user.following.all()
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
         return Post.objects.filter(author__in=self.request.user.following.all()).order_by('-created_at')
     
