@@ -79,9 +79,10 @@ class LikePostView(generics.GenericAPIView):
 class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, pk):
+    def post(self, request, pk,*args, **kwargs):
         post = Post.objects.get(id=pk)
         Like.objects.filter(user=request.user, post=post).delete()
+        post = get_object_or_404(Post, pk=pk)
         return Response({"message": "Post unliked!"})  
 
 class PostDetailView(generics.RetrieveAPIView):
