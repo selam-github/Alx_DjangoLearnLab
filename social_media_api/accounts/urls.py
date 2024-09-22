@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import UserRegistrationView, UserLoginView
-from .views import CustomUserList,customUserDetail,UserViewSet
+from .views import CustomUserList,CustomUserDetail,UserViewSet
 from .views import FollowUserView, UnfollowUserView
 
 
