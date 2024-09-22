@@ -4,12 +4,19 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import CustomUser
-from .serializers import UserSerializer,PostSerializer
+from .serializers import UserSerializer,PostSerializer,CustomUserSerializer
 from django.contrib.auth import authenticate
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 
 
+class CustomUserList(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class CustomUserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 class UserRegistrationView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
