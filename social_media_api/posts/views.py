@@ -79,10 +79,9 @@ class LikePostView(generics.GenericAPIView):
 class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, pk,*args, **kwargs):
+    def post(self, request, pk,):
         post = Post.objects.get(id=pk)
         Like.objects.filter(user=request.user, post=post).delete()
-        post = get_object_or_404(Post, pk=pk)
         return Response({"message": "Post unliked!"})  
 
 class PostDetailView(generics.RetrieveAPIView):
@@ -92,3 +91,13 @@ class PostDetailView(generics.RetrieveAPIView):
     def get_object(self):
         pk = self.kwargs.get('pk')
         return get_object_or_404(Post, pk=pk) 
+    
+class PostLikeView(generics.UpdateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        # Logic to like the post goes here
+        # e.g., adding the user to a Like model associated with the post
+        return Response({'status': 'post liked'})
