@@ -6,6 +6,7 @@ from django_filters.rest_framework import FilterSet, filters
 from django_filters import rest_framework as filters
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 # ViewSet for Post
 class PostViewSet(viewsets.ModelViewSet):
