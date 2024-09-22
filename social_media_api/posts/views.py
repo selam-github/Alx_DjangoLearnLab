@@ -1,15 +1,15 @@
-from django.shortcuts import render,get_object_or_404
-from rest_framework import viewsets, permissions
+from django.shortcuts import render
+from rest_framework import viewsets, permissions,status,filters, generics
 from .models import Post, Comment,Like
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import FilterSet, filters
 from django_filters import rest_framework as filters
-from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, permissions
-from rest_framework.response import Response
 from notifications.models import Notification
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 
 
 # ViewSet for Post
@@ -58,46 +58,37 @@ def get_queryset(self):
     
 
 
-class LikePostView(generics.GenericAPIView):
+class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, pk):
-        post = Post.objects.get(id=pk)
-        like, created = Like.objects.get_or_create(user=request.user, post=post)
-
-        if created:
-            # Create a notification
-            Notification.objects.create(
-                recipient=post.author,
-                actor=request.user,
-                verb='liked your post',
-                target=post
-            )
-            return Response({"message": "Post liked!"})
-        return Response({"message": "You already liked this post."})
-
-class UnlikePostView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, pk,):
-        post = Post.objects.get(id=pk)
-        Like.objects.filter(user=request.user, post=post).delete()
-        return Response({"message": "Post unliked!"})  
-
-class PostDetailView(generics.RetrieveAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer  # Make sure to import your PostSerializer
-
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(Post, pk=pk) 
-    
-class PostLikeView(generics.UpdateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
 
     def post(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Post, pk=pk)
-        # Logic to like the post goes here
-        # e.g., adding the user to a Like model associated with the post
-        return Response({'status': 'post liked'})
+        post = generics.get_object_or_404(Post, pk=pk)
+
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
+        if not created:
+            return Response({"message": "You have already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate a notification for the post author
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target=post
+        )
+
+        return Response({"message": "Post liked successfully"}, status=status.HTTP_201_CREATED)
+
+class UnlikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk, *args, **kwargs):
+        post = generics.get_object_or_404(Post, pk=pk)
+
+        like = Like.objects.filter(user=request.user, post=post).first()
+        
+        if like:
+            like.delete()
+            return Response({"message": "Post unliked successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "You haven't liked this post yet"}, status=status.HTTP_400_BAD_REQUEST)
