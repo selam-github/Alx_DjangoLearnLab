@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from rest_framework import viewsets, permissions
 from .models import Post, Comment,Like
 from .serializers import PostSerializer, CommentSerializer
@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from notifications.models import Notification
+
 
 # ViewSet for Post
 class PostViewSet(viewsets.ModelViewSet):
